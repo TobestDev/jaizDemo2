@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jaiz Bank Intranet Portal</title>
+
+  <link rel="icon" type="image/svg+xml" href="https://jaizbankplc.com/_next/image?url=http%3A%2F%2Fstrapi%3A1338%2Fuploads%2Fleaf_237fd3c500.svg&w=640&q=75">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ============ RESET & TOKENS ============ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #002f5e;
+      --primary-hover: #001f3f;
+      --primary-light: #e6eef7;
+      --accent-blue: #aad5ff;
+      --accent-blue-light: #e6f2ff;
+      --accent-gold: rgb(209, 195, 35);
+      --accent-gold-hex: #d1c323;
+      --accent-gold-light: #fdf8d4;
+      --text-dark: #0d1a2b;
+      --text-mid: #3d4f66;
+      --text-gray: #6b7280;
+      --text-light: #9ca3af;
+      --bg-body: #eef2f7;
+      --bg-white: #ffffff;
+      --bg-light: #f8fafc;
+      --border-color: #dfe6ef;
+      --shadow-sm: 0 1px 3px rgba(0, 47, 94, 0.06);
+      --shadow-md: 0 4px 10px rgba(0, 47, 94, 0.08);
+      --shadow-lg: 0 10px 30px rgba(0, 47, 94, 0.12);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-dark);
+      background: var(--bg-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ============ SHELL ============ */
+    .shell {
+      display: grid;
+      grid-template-rows: 56px 1fr;
+      grid-template-columns: 64px 1fr 320px;
+      grid-template-areas:
+        "top top top"
+        "rail main right";
+      height: 100vh;
+    }
+
+    /* ============ TOP BAR ============ */
+    .topbar {
+      grid-area: top;
+      background: var(--bg-white);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 18px;
+      border-right: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+    .brand img { width: 28px; height: 28px; }
+    .brand span { font-weight: 800; font-size: 14px; color: var(--primary); letter-spacing: -0.2px; }
+
+    .topnav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .topnav::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-mid);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .nav-btn:hover { background: var(--primary-light); color: var(--primary); }
+    .nav-btn.active { background: var(--primary); color: white; }
+    .nav-btn i { font-size: 13px; }
+
+    .topsearch {
+      position: relative;
+      width: 220px;
+      flex-shrink: 0;
+    }
+    .topsearch i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 12px;
+    }
+    .topsearch input {
+      width: 100%;
+      padding: 9px 14px 9px 34px;
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      font-size: 12.5px;
+      background: var(--bg-light);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .topsearch input:focus {
+      background: white;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 47, 94, 0.1);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: var(--text-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .icon-btn:hover { background: var(--primary-light); color: var(--primary); }
+    .icon-btn .dot-badge {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 8px; height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #0a4d8c);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* ============ LEFT RAIL ============ */
+    .rail {
+      grid-area: rail;
+      background: var(--bg-white);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 6px;
+    }
+    .rail-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      color: var(--text-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      transition: all 0.2s;
+      position: relative;
+      cursor: pointer;
+    }
+    .rail-btn:hover { background: var(--primary-light); color: var(--primary); }
+    .rail-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 6px 16px rgba(0, 47, 94, 0.3);
+    }
+    .rail-btn.active::before {
+      content: '';
+      position: absolute;
+      left: -16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 24px;
+      background: var(--accent-gold);
+      border-radius: 0 4px 4px 0;
+    }
+    .rail-divider {
+      width: 24px;
+      height: 1px;
+      background: var(--border-color);
+      margin: 6px 0;
+    }
+
+    /* ============ MAIN ============ */
+    .main {
+      grid-area: main;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .main::-webkit-scrollbar { width: 6px; }
+    .main::-webkit-scrollbar-thumb { background: #c4d0de; border-radius: 10px; }
+
+    /* ============ PAGES ============ */
+    .page { display: none; }
+    .page.active { display: flex; flex-direction: column; gap: 14px; }
+
+    .page-header {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .page-header-left h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.3px;
+      margin-bottom: 3px;
+    }
+    .page-header-left p {
+      font-size: 12.5px;
+      color: var(--text-gray);
+    }
+
+    /* ============ HERO CARD (Home) ============ */
+    .hero-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .hero-left .hero-greeting {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 13.5px;
+      margin-bottom: 6px;
+    }
+    .hero-left .hero-title {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1.1;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+    .hero-left .hero-sub {
+      font-size: 13px;
+      color: var(--text-gray);
+      margin-bottom: 4px;
+    }
+    .hero-left .hero-datetime {
+      font-size: 12px;
+      color: var(--text-light);
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .hero-image {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      height: 190px;
+      box-shadow: var(--shadow-md);
+    }
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-image .carousel-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 47, 94, 0.75);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      backdrop-filter: blur(6px);
+    }
+
+    /* ============ QUICK APPS SECTION ============ */
+    .quickapps-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .quickapps-header h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-dark);
+      letter-spacing: -0.2px;
+    }
+    .quickapps-header h2 i {
+      color: var(--primary);
+      margin-right: 8px;
+      font-size: 15px;
+    }
+
+    .btn-view-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 12.5px;
+      font-weight: 600;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 47, 94, 0.25);
+      cursor: pointer;
+    }
+    .btn-view-all:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 47, 94, 0.35);
+    }
+    .btn-view-all i { font-size: 11px; transition: transform 0.2s; }
+    .btn-view-all:hover i { transform: translateX(3px); }
+
+    /* Search on home */
+    .home-search-bar {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 2px;
+    }
+    .home-search-bar i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 13px;
+    }
+    .home-search-bar input {
+      width: 100%;
+      padding: 11px 16px 11px 42px;
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      font-size: 13px;
+      background: var(--bg-white);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .home-search-bar input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 47, 94, 0.08);
+    }
+
+    /* Quick apps grid — 3 columns */
+    .quickapps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .quickapp-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 0;
+    }
+    .quickapp-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 47, 94, 0.1);
+    }
+
+    .quickapp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .quickapp-info { flex: 1; min-width: 0; }
+    .quickapp-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .quickapp-desc {
+      font-size: 11.5px;
+      color: var(--text-gray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .quickapps-empty {
+      grid-column: 1 / -1;
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-gray);
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--border-color);
+    }
+    .quickapps-empty i {
+      font-size: 34px;
+      color: #c4d0de;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .quickapps-empty p { font-size: 12.5px; }
+
+    /* ============ CARD ============ */
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 8px;
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-dark);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title i { color: var(--primary); }
+    .card-link {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-link:hover { color: var(--accent-gold-hex); }
+
+    /* ============ APP LIST GRID ============ */
+    .app-list-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .app-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg-light);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .app-item:hover {
+      background: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 47, 94, 0.08);
+    }
+    .app-item-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .app-item-info { flex: 1; min-width: 0; }
+    .app-item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-item-desc {
+      font-size: 11px;
+      color: var(--text-gray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ============ APPLICATIONS PAGE SEARCH ============ */
+    .apps-search-bar {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .apps-search-input {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+    }
+    .apps-search-input i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 13px;
+    }
+    .apps-search-input input {
+      width: 100%;
+      padding: 11px 16px 11px 40px;
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      font-size: 13px;
+      background: var(--bg-light);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .apps-search-input input:focus {
+      background: white;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 47, 94, 0.08);
+    }
+
+    .apps-filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 8px 14px;
+      border-radius: 50px;
+      border: 1px solid var(--border-color);
+      background: white;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .chip:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .apps-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-gray);
+      white-space: nowrap;
+    }
+
+    .apps-empty {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--text-gray);
+      grid-column: 1 / -1;
+    }
+    .apps-empty i {
+      font-size: 44px;
+      color: #c4d0de;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .apps-empty h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+    .apps-empty p { font-size: 12.5px; }
+
+    /* ============ RIGHT PANEL ============ */
+    .rightpanel {
+      grid-area: right;
+      background: var(--bg-white);
+      border-left: 1px solid var(--border-color);
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .rightpanel::-webkit-scrollbar { width: 6px; }
+    .rightpanel::-webkit-scrollbar-thumb { background: #c4d0de; border-radius: 10px; }
+
+    .prayer-card {
+      background: linear-gradient(135deg, var(--primary) 0%, #0a4d8c 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .prayer-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(209, 195, 35, 0.25), transparent 70%);
+      border-radius: 50%;
+    }
+    .prayer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .prayer-title {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--accent-gold-hex);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+    .prayer-next {
+      font-size: 10.5px;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 600;
+    }
+    .prayer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+    }
+    .prayer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      font-size: 12px;
+    }
+    .prayer-row.active .prayer-name,
+    .prayer-row.active .prayer-time {
+      color: var(--accent-gold-hex);
+      font-weight: 700;
+    }
+    .prayer-name { color: rgba(255, 255, 255, 0.85); font-weight: 500; }
+    .prayer-time { color: white; font-weight: 700; }
+
+    .quicklinks { display: flex; flex-direction: column; gap: 2px; }
+    .quicklink {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-mid);
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .quicklink:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding-left: 14px;
+    }
+    .quicklink i {
+      width: 16px;
+      text-align: center;
+      color: var(--text-light);
+      font-size: 12px;
+    }
+    .quicklink:hover i { color: var(--primary); }
+
+    .notif-list { display: flex; flex-direction: column; gap: 6px; }
+    .notif-item {
+      display: flex;
+      gap: 10px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    .notif-item:hover { background: var(--bg-light); }
+    .notif-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      color: white;
+    }
+    .notif-content { flex: 1; min-width: 0; }
+    .notif-text {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.35;
+      margin-bottom: 2px;
+    }
+    .notif-time {
+      font-size: 10px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .birthday-widget {
+      background: linear-gradient(135deg, var(--accent-gold-light), #fff8e6);
+      border: 1px solid var(--accent-gold);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      text-align: center;
+    }
+    .birthday-widget h4 {
+      font-size: 11px;
+      font-weight: 800;
+      color: #8a7f10;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .birthday-avatars {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .birthday-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #0a4d8c);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+      border: 2px solid white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .birthday-text {
+      font-size: 11px;
+      color: var(--text-mid);
+      font-weight: 500;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1280px) {
+      .shell { grid-template-columns: 60px 1fr 280px; }
+      .quickapps-grid { grid-template-columns: repeat(2, 1fr); }
+      .app-list-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-card { grid-template-columns: 1fr; padding: 24px; gap: 20px; }
+      .hero-image { height: 160px; }
+      .hero-left .hero-title { font-size: 26px; }
+    }
+
+    @media (max-width: 1024px) {
+      .shell {
+        grid-template-columns: 60px 1fr;
+        grid-template-areas:
+          "top top"
+          "rail main";
+      }
+      .rightpanel { display: none; }
+      .topsearch { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      html, body { overflow: auto; }
+      .shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+          "top"
+          "main";
+        height: auto;
+        min-height: 100vh;
+      }
+      .rail { display: none; }
+      .main { padding: 12px; }
+      .quickapps-grid { grid-template-columns: 1fr; }
+      .app-list-grid { grid-template-columns: 1fr; }
+      .topnav { overflow-x: auto; }
+      .hero-card { padding: 20px; }
+      .hero-left .hero-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="shell">
+
+    <!-- ==================== TOP BAR ==================== -->
+    <header class="topbar">
+      <div class="brand">
+        <img src="https://jaizbankplc.com/_next/image?url=http%3A%2F%2Fstrapi%3A1338%2Fuploads%2Fleaf_237fd3c500.svg&w=640&q=75" alt="Jaiz Bank">
+        <span>Jaiz Bank Intranet</span>
+      </div>
+
+      <nav class="topnav" id="topnav"></nav>
+
+      <div class="topsearch">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search...">
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn">
+          <i class="fa-solid fa-bell"></i>
+          <span class="dot-badge"></span>
+        </button>
+        <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+        <div class="avatar">AB</div>
+      </div>
+    </header>
+
+    <!-- ==================== LEFT RAIL ==================== -->
+    <aside class="rail">
+      <a class="rail-btn active" title="Home" data-page="home"><i class="fa-solid fa-house"></i></a>
+      <a class="rail-btn" title="Applications" data-page="apps"><i class="fa-solid fa-grip"></i></a>
+      <a class="rail-btn" title="Analytics" data-page="analytics"><i class="fa-solid fa-chart-line"></i></a>
+      <a class="rail-btn" title="Documents" data-page="documents"><i class="fa-solid fa-folder-open"></i></a>
+      <a class="rail-btn" title="People" data-page="people"><i class="fa-solid fa-users"></i></a>
+      <div class="rail-divider"></div>
+      <a class="rail-btn" title="Calendar" data-page="calendar"><i class="fa-solid fa-calendar-days"></i></a>
+      <a class="rail-btn" title="Support" data-page="support"><i class="fa-solid fa-headset"></i></a>
+      <a class="rail-btn" title="Settings" data-page="settings"><i class="fa-solid fa-gear"></i></a>
+    </aside>
+
+    <!-- ==================== MAIN ==================== -->
+    <main class="main" id="mainContent">
+
+      <!-- ============ HOME PAGE ============ -->
+      <div class="page active" data-page="home">
+
+        <!-- HERO -->
+        <div class="hero-card">
+          <div class="hero-left">
+            <p class="hero-greeting">Assalamu Alaikum</p>
+            <h1 class="hero-title">Welcome to<br>Jaiz Bank Intranet</h1>
+            <p class="hero-sub">Your digital workplace for news, services, people and productivity.</p>
+            <p class="hero-datetime" id="homeDatetime">Friday, 18 Sep 2026 • 7:40 AM</p>
+          </div>
+
+          <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop" alt="Featured">
+            <span class="carousel-badge">1/3</span>
+          </div>
+        </div>
+
+        <!-- QUICK APPS HEADER -->
+        <div class="quickapps-header">
+          <div>
+            <h2><i class="fa-solid fa-grip"></i> Quick Apps</h2>
+            <p style="font-size:12px; color:var(--text-gray); margin-top:4px;">Your most-used applications at a glance</p>
+          </div>
+          <button class="btn-view-all" id="viewAllAppsBtn">
+            View all Apps <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- HOME SEARCH -->
+        <div class="home-search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="homeAppsSearch" placeholder="Search quick apps...">
+        </div>
+
+        <!-- QUICK APPS GRID (3 columns) -->
+        <div class="quickapps-grid" id="quickAppsGrid"></div>
+
+      </div>
+
+      <!-- ============ APPLICATIONS PAGE ============ -->
+      <div class="page" data-page="apps">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>🎯 Applications</h1>
+            <p>All internal applications available across Jaiz Bank</p>
+          </div>
+        </div>
+
+        <div class="apps-search-bar">
+          <div class="apps-search-input">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="appsSearch" placeholder="Search applications by name or category...">
+          </div>
+          <div class="apps-filter-chips" id="appsFilters">
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="core">Core Banking</button>
+            <button class="chip" data-filter="hr">HR</button>
+            <button class="chip" data-filter="payments">Payments</button>
+            <button class="chip" data-filter="reporting">Reporting</button>
+            <button class="chip" data-filter="ops">Operations</button>
+          </div>
+          <span class="apps-count" id="appsCount">0 applications</span>
+        </div>
+
+        <div class="card">
+          <div class="app-list-grid" id="allAppsList"></div>
+        </div>
+      </div>
+
+      <!-- ============ PORTALS PAGE ============ -->
+      <div class="page" data-page="portals">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>🚪 Portals</h1>
+            <p>Access all Jaiz Bank portals — Employee, Admin, Customer, Vendor</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-door-open"></i> Available Portals</h3>
+          </div>
+          <div class="app-list-grid" id="portalsApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ PRODUCTS PAGE ============ -->
+      <div class="page" data-page="products">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>📦 Products</h1>
+            <p>Islamic banking products — Savings, Loans, Cards, Islamic Finance</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-box"></i> Product Systems</h3>
+          </div>
+          <div class="app-list-grid" id="productsApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ ENTERPRISE PAGE ============ -->
+      <div class="page" data-page="enterprise">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>⚙️ Enterprise Applications</h1>
+            <p>Core banking, payments, reporting and operations systems</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-server"></i> Core Systems</h3>
+          </div>
+          <div class="app-list-grid" id="enterpriseApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ HR PAGE ============ -->
+      <div class="page" data-page="hr">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>👥 HR</h1>
+            <p>Human resources — Leave, Payroll, Staff directory</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-users-gear"></i> HR Applications</h3>
+          </div>
+          <div class="app-list-grid" id="hrApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ DIVISIONS PAGE ============ -->
+      <div class="page" data-page="divisions">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>🏢 Divisions</h1>
+            <p>Access systems by business division</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-building"></i> Divisions &amp; Units</h3>
+          </div>
+          <div class="app-list-grid" id="divisionsApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ DOCUMENTS PAGE ============ -->
+      <div class="page" data-page="documents">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>📄 Documents</h1>
+            <p>Policies, circulars, forms, reports and knowledge base</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-folder-open"></i> Document Systems</h3>
+          </div>
+          <div class="app-list-grid" id="documentsApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ ANALYTICS PAGE ============ -->
+      <div class="page" data-page="analytics">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>📊 Analytics</h1>
+            <p>Business intelligence and reporting</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> Reporting Tools</h3>
+          </div>
+          <div class="app-list-grid" id="analyticsApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ PEOPLE PAGE ============ -->
+      <div class="page" data-page="people">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>👤 People</h1>
+            <p>Staff directory, org chart and contacts</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-users"></i> People Systems</h3>
+          </div>
+          <div class="app-list-grid" id="peopleApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ CALENDAR PAGE ============ -->
+      <div class="page" data-page="calendar">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>📅 Calendar</h1>
+            <p>Corporate calendar, meetings and events</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-calendar-days"></i> Calendar Tools</h3>
+          </div>
+          <div class="app-list-grid" id="calendarApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ SUPPORT PAGE ============ -->
+      <div class="page" data-page="support">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>🎧 Support</h1>
+            <p>IT helpdesk, service desk and troubleshooting</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-headset"></i> Support Tools</h3>
+          </div>
+          <div class="app-list-grid" id="supportApps"></div>
+        </div>
+      </div>
+
+      <!-- ============ SETTINGS PAGE ============ -->
+      <div class="page" data-page="settings">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>⚙️ Settings</h1>
+            <p>Personal preferences and account settings</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-sliders"></i> Preferences</h3>
+          </div>
+          <div class="app-list-grid" id="settingsApps"></div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ==================== RIGHT PANEL ==================== -->
+    <aside class="rightpanel">
+
+      <div class="prayer-card">
+        <div class="prayer-header">
+          <span class="prayer-title"><i class="fa-solid fa-mosque"></i> Prayer Times</span>
+          <span class="prayer-next">Next: 2h 14m</span>
+        </div>
+        <div class="prayer-list">
+          <div class="prayer-row"><span class="prayer-name">Fajr</span><span class="prayer-time">5:14 AM</span></div>
+          <div class="prayer-row"><span class="prayer-name">Dhuhr</span><span class="prayer-time">12:34 PM</span></div>
+          <div class="prayer-row active"><span class="prayer-name">Asr</span><span class="prayer-time">3:48 PM</span></div>
+          <div class="prayer-row"><span class="prayer-name">Maghrib</span><span class="prayer-time">6:32 PM</span></div>
+          <div class="prayer-row"><span class="prayer-name">Isha</span><span class="prayer-time">7:44 PM</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><i class="fa-solid fa-link"></i> Quick Links</h3>
+        </div>
+        <div class="quicklinks">
+          <a class="quicklink"><i class="fa-solid fa-users-gear"></i> HR Portal</a>
+          <a class="quicklink"><i class="fa-solid fa-folder-open"></i> Document Repository</a>
+          <a class="quicklink"><i class="fa-solid fa-calendar-check"></i> Meeting Room Booking</a>
+          <a class="quicklink"><i class="fa-solid fa-shield-halved"></i> Information Security</a>
+          <a class="quicklink"><i class="fa-solid fa-mosque"></i> Shariah Compliance</a>
+          <a class="quicklink"><i class="fa-solid fa-scale-balanced"></i> Compliance Portal</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"><i class="fa-solid fa-bell"></i> Notifications</h3>
+          <a href="#" class="card-link">See all</a>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item">
+            <div class="notif-icon" style="background:#EF4444;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="notif-content">
+              <p class="notif-text">CBN circular updated</p>
+              <span class="notif-time">10 min ago</span>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon" style="background:#F59E0B;"><i class="fa-solid fa-lock"></i></div>
+            <div class="notif-content">
+              <p class="notif-text">Password expires in 3 days</p>
+              <span class="notif-time">1 hour ago</span>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon" style="background:#22C55E;"><i class="fa-solid fa-file-shield"></i></div>
+            <div class="notif-content">
+              <p class="notif-text">New Shariah policy published</p>
+              <span class="notif-time">3 hours ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="birthday-widget">
+        <h4>🎉 Birthdays Today</h4>
+        <div class="birthday-avatars">
+          <div class="birthday-avatar">AB</div>
+          <div class="birthday-avatar">MK</div>
+          <div class="birthday-avatar">ZH</div>
+        </div>
+        <p class="birthday-text">Wish them a happy birthday!</p>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <script>
+    /* ==========================================================
+       JAIZ BANK INTRANET — PAGE ROUTER + APP DATA
+       ========================================================== */
+
+    const NAV_ITEMS = [
+      { id: 'home',       label: 'Home',       icon: 'fa-house' },
+      { id: 'portals',    label: 'Portals',    icon: 'fa-door-open' },
+      { id: 'products',   label: 'Products',   icon: 'fa-box' },
+      { id: 'enterprise', label: 'Enterprise', icon: 'fa-server' },
+      { id: 'hr',         label: 'HR',         icon: 'fa-users-gear' },
+      { id: 'divisions',  label: 'Divisions',  icon: 'fa-building' },
+      { id: 'documents',  label: 'Documents',  icon: 'fa-folder-open' },
+      { id: 'analytics',  label: 'Analytics',  icon: 'fa-chart-line' }
+    ];
+
+    // ====== QUICK APPS (Home) — only 6 favorites ======
+    const QUICK_APPS = [
+      { name: 'Finacle',        desc: 'Core Banking System',      icon: 'fa-building-columns', color: '#002f5e' },
+      { name: 'SAP',            desc: 'Enterprise Resource',      icon: 'fa-chart-pie',        color: '#0FAAFF' },
+      { name: 'NIBSS',          desc: 'Instant Payments',         icon: 'fa-bolt',             color: '#d1c323' },
+      { name: 'Insights',       desc: 'Business Analytics',       icon: 'fa-chart-line',       color: '#8B5CF6' },
+      { name: 'HR Portal',      desc: 'Human Resources',          icon: 'fa-users',            color: '#22C55E' },
+      { name: 'Treasury Desk',  desc: 'Treasury & Forex',         icon: 'fa-vault',            color: '#F59E0B' }
+    ];
+
+    // ====== FULL APP DATA ======
+    const APPS = {
+      portals: [
+        { name: 'Employee Portal',      desc: 'Internal staff self-service',    icon: 'fa-user-tie',      color: '#002f5e', cat: 'core' },
+        { name: 'Admin Portal',         desc: 'Administrative controls',        icon: 'fa-users-gear',    color: '#0a4d8c', cat: 'core' },
+        { name: 'Customer Portal',      desc: 'Customer self-service',          icon: 'fa-user-shield',   color: '#d1c323', cat: 'core' },
+        { name: 'Vendor Portal',        desc: 'Vendor onboarding & invoices',   icon: 'fa-briefcase',     color: '#14B8A6', cat: 'ops' },
+        { name: 'Executive Dashboard',  desc: 'Executive KPI overview',         icon: 'fa-chart-line',    color: '#8B5CF6', cat: 'reporting' },
+        { name: 'Shariah Compliance',   desc: 'Shariah review & audit',         icon: 'fa-mosque',        color: '#002f5e', cat: 'core' }
+      ],
+
+      products: [
+        { name: 'Savings Manager',     desc: 'Savings accounts & tiers',       icon: 'fa-piggy-bank',          color: '#22C55E', cat: 'core' },
+        { name: 'Loans System',        desc: 'Loans & advances',               icon: 'fa-hand-holding-dollar', color: '#d1c323', cat: 'core' },
+        { name: 'Card Management',     desc: 'Debit & credit cards',           icon: 'fa-credit-card',         color: '#8B5CF6', cat: 'payments' },
+        { name: 'Mobile Banking',      desc: 'Mobile app backend',             icon: 'fa-mobile-screen',       color: '#3B82F6', cat: 'payments' },
+        { name: 'Internet Banking',    desc: 'Web banking platform',           icon: 'fa-globe',               color: '#06B6D4', cat: 'payments' },
+        { name: 'Islamic Finance',     desc: 'Murabaha, Ijara, Mudarabah',     icon: 'fa-mosque',              color: '#002f5e', cat: 'core' }
+      ],
+
+      enterprise: [
+        { name: 'Finacle',         desc: 'Core banking',                 icon: 'fa-building-columns', color: '#002f5e', cat: 'core' },
+        { name: 'NIBSS Instant',   desc: 'Instant payments',             icon: 'fa-bolt',              color: '#d1c323', cat: 'payments' },
+        { name: 'RTGS Portal',     desc: 'Real-time gross settlement',   icon: 'fa-right-left',        color: '#F59E0B', cat: 'payments' },
+        { name: 'SWIFT Terminal',  desc: 'International transfers',      icon: 'fa-globe',             color: '#3B82F6', cat: 'payments' },
+        { name: 'JaizPay Merchant',desc: 'Merchant payments',            icon: 'fa-qrcode',            color: '#002f5e', cat: 'payments' },
+        { name: 'Processmaker',    desc: 'Workflow automation',          icon: 'fa-diagram-project',   color: '#6366F1', cat: 'ops' },
+        { name: 'Lead to Loan',    desc: 'Loan origination',             icon: 'fa-hand-holding-dollar', color: '#d1c323', cat: 'ops' },
+        { name: 'Trade Finance',   desc: 'Trade & letters of credit',    icon: 'fa-ship',              color: '#0891B2', cat: 'ops' }
+      ],
+
+      hr: [
+        { name: 'SAP SuccessFactors', desc: 'HR management suite',       icon: 'fa-chart-pie',       color: '#0FAAFF', cat: 'hr' },
+        { name: 'Leave Manager',      desc: 'Leave requests & approvals', icon: 'fa-calendar-check',  color: '#22C55E', cat: 'hr' },
+        { name: 'Payroll Portal',     desc: 'Salaries & payslips',        icon: 'fa-money-bill-wave', color: '#d1c323', cat: 'hr' },
+        { name: 'Staff Directory',    desc: 'Employee records',           icon: 'fa-address-book',    color: '#06B6D4', cat: 'hr' },
+        { name: 'Recruitment',        desc: 'Hiring & onboarding',        icon: 'fa-user-plus',       color: '#8B5CF6', cat: 'hr' },
+        { name: 'Performance',        desc: 'Appraisals & reviews',       icon: 'fa-trophy',          color: '#F59E0B', cat: 'hr' }
+      ],
+
+      divisions: [
+        { name: 'Retail Banking',    desc: 'Consumer banking ops',         icon: 'fa-store',           color: '#002f5e', cat: 'core' },
+        { name: 'Corporate Banking', desc: 'Corporate & SME accounts',     icon: 'fa-city',            color: '#0a4d8c', cat: 'core' },
+        { name: 'Treasury',          desc: 'Liquidity & investments',      icon: 'fa-vault',           color: '#d1c323', cat: 'ops' },
+        { name: 'Risk Management',   desc: 'Enterprise risk systems',      icon: 'fa-shield-halved',   color: '#EF4444', cat: 'ops' },
+        { name: 'Finance & Accounts',desc: 'Financial reporting',          icon: 'fa-file-invoice-dollar', color: '#22C55E', cat: 'reporting' },
+        { name: 'Compliance',        desc: 'Regulatory compliance',        icon: 'fa-scale-balanced',  color: '#8B5CF6', cat: 'ops' },
+        { name: 'IT & Operations',   desc: 'Infrastructure & support',     icon: 'fa-computer',        color: '#06B6D4', cat: 'ops' },
+        { name: 'Shariah Audit',     desc: 'Shariah compliance review',    icon: 'fa-mosque',          color: '#002f5e', cat: 'core' }
+      ],
+
+      documents: [
+        { name: 'Policy Manual',       desc: 'Bankwide policies',          icon: 'fa-book',           color: '#002f5e', cat: 'ops' },
+        { name: 'Employee Handbook',   desc: 'Staff handbook',             icon: 'fa-book-open',      color: '#0a4d8c', cat: 'hr' },
+        { name: 'Circulars',           desc: 'CBN & internal circulars',   icon: 'fa-file-contract',  color: '#d1c323', cat: 'ops' },
+        { name: 'Annual Reports',      desc: 'Yearly financial reports',   icon: 'fa-file-pdf',       color: '#EF4444', cat: 'reporting' },
+        { name: 'Training Materials',  desc: 'Learning resources',         icon: 'fa-graduation-cap', color: '#8B5CF6', cat: 'hr' },
+        { name: 'Shariah Forms',       desc: 'Shariah compliance forms',   icon: 'fa-mosque',         color: '#22C55E', cat: 'core' },
+        { name: 'HR Forms',            desc: 'HR templates',               icon: 'fa-file-lines',     color: '#06B6D4', cat: 'hr' },
+        { name: 'Compliance Forms',    desc: 'Regulatory forms',           icon: 'fa-file-shield',    color: '#F59E0B', cat: 'ops' }
+      ],
+
+      analytics: [
+        { name: 'Insights',          desc: 'Business intelligence',      icon: 'fa-chart-line',         color: '#8B5CF6', cat: 'reporting' },
+        { name: 'MPR (OBIEE)',       desc: 'Management reporting',       icon: 'fa-chart-column',       color: '#002f5e', cat: 'reporting' },
+        { name: 'FX Report',         desc: 'Foreign exchange analytics', icon: 'fa-money-bill-trend-up',color: '#22C55E', cat: 'reporting' },
+        { name: 'Regulatory Reports',desc: 'CBN & NDIC reports',         icon: 'fa-file-shield',        color: '#EF4444', cat: 'reporting' },
+        { name: 'Shariah Reports',   desc: 'Shariah audit analytics',    icon: 'fa-mosque',             color: '#d1c323', cat: 'reporting' },
+        { name: 'Custom Dashboards', desc: 'Build your own dashboards',  icon: 'fa-gauge-high',         color: '#06B6D4', cat: 'reporting' }
+      ],
+
+      people: [
+        { name: 'Staff Directory',  desc: 'Find any employee',           icon: 'fa-address-book', color: '#002f5e', cat: 'hr' },
+        { name: 'Org Chart',        desc: 'Organizational hierarchy',    icon: 'fa-sitemap',      color: '#0a4d8c', cat: 'hr' },
+        { name: 'Contacts',         desc: 'Key contacts & extensions',   icon: 'fa-phone',        color: '#d1c323', cat: 'hr' },
+        { name: 'Kudos',            desc: 'Employee recognition',        icon: 'fa-star',         color: '#F59E0B', cat: 'hr' }
+      ],
+
+      calendar: [
+        { name: 'Corporate Calendar',  desc: 'Company-wide events',        icon: 'fa-calendar-days',   color: '#002f5e', cat: 'ops' },
+        { name: 'Meeting Room Booking',desc: 'Book conference rooms',      icon: 'fa-calendar-check',  color: '#22C55E', cat: 'ops' },
+        { name: 'My Schedule',         desc: 'Personal calendar',          icon: 'fa-clock',           color: '#8B5CF6', cat: 'ops' },
+        { name: 'Team Calendar',       desc: 'Team events',                icon: 'fa-users',           color: '#06B6D4', cat: 'ops' }
+      ],
+
+      support: [
+        { name: 'IT Helpdesk',       desc: 'Report IT issues',           icon: 'fa-headset',         color: '#002f5e', cat: 'ops' },
+        { name: 'Service Desk',      desc: 'Track service requests',     icon: 'fa-ticket',          color: '#0a4d8c', cat: 'ops' },
+        { name: 'Knowledge Base',    desc: 'FAQs & how-to guides',       icon: 'fa-circle-question', color: '#d1c323', cat: 'ops' },
+        { name: 'Troubleshooting',   desc: 'Common fixes',               icon: 'fa-bug',             color: '#EF4444', cat: 'ops' }
+      ],
+
+      settings: [
+        { name: 'Profile',           desc: 'Personal information',       icon: 'fa-user',            color: '#002f5e', cat: 'ops' },
+        { name: 'Notifications',     desc: 'Alert preferences',          icon: 'fa-bell',            color: '#d1c323', cat: 'ops' },
+        { name: 'Security',          desc: 'Password & 2FA',             icon: 'fa-lock',            color: '#EF4444', cat: 'ops' },
+        { name: 'Theme',             desc: 'Display preferences',        icon: 'fa-palette',         color: '#8B5CF6', cat: 'ops' }
+      ]
+    };
+
+    // Flatten + dedupe
+    const ALL_APPS = (() => {
+      const seen = new Set();
+      const out = [];
+      Object.keys(APPS).forEach(key => {
+        APPS[key].forEach(app => {
+          if (!seen.has(app.name)) {
+            seen.add(app.name);
+            out.push(app);
+          }
+        });
+      });
+      return out;
+    })();
+
+    /* ==========================================================
+       RENDER TOP NAV
+       ========================================================== */
+    const topnav = document.getElementById('topnav');
+
+    function renderNav() {
+      topnav.innerHTML = '';
+      NAV_ITEMS.forEach(item => {
+        const btn = document.createElement('a');
+        btn.className = 'nav-btn' + (item.id === 'home' ? ' active' : '');
+        btn.dataset.page = item.id;
+        btn.innerHTML = `<i class="fa-solid ${item.icon}"></i> ${item.label}`;
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          navigateTo(item.id);
+        });
+        topnav.appendChild(btn);
+      });
+    }
+
+    /* ==========================================================
+       NAVIGATE
+       ========================================================== */
+    function navigateTo(pageId) {
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.page === pageId);
+      });
+
+      document.querySelectorAll('.rail-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.page === pageId);
+      });
+
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.toggle('active', p.dataset.page === pageId);
+      });
+
+      window.location.hash = pageId;
+      document.getElementById('mainContent').scrollTop = 0;
+    }
+
+    /* ==========================================================
+       RENDER APP LISTS (used for all pages)
+       ========================================================== */
+    function renderListApps(containerId, list) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="apps-empty">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <h3>No applications found</h3>
+            <p>Try a different search term or filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.forEach(app => {
+        const item = document.createElement('div');
+        item.className = 'app-item';
+        item.innerHTML = `
+          <div class="app-item-icon" style="background:${app.color};">
+            <i class="fa-solid ${app.icon}"></i>
+          </div>
+          <div class="app-item-info">
+            <div class="app-item-name">${app.name}</div>
+            <div class="app-item-desc">${app.desc}</div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    /* ==========================================================
+       QUICK APPS (HOME) — with live search
+       ========================================================== */
+    let homeSearchTerm = '';
+
+    function renderQuickApps() {
+      const grid = document.getElementById('quickAppsGrid');
+      if (!grid) return;
+
+      const q = homeSearchTerm.toLowerCase().trim();
+      const filtered = QUICK_APPS.filter(app =>
+        !q ||
+        app.name.toLowerCase().includes(q) ||
+        app.desc.toLowerCase().includes(q)
+      );
+
+      grid.innerHTML = '';
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="quickapps-empty">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <p>No quick apps match "${homeSearchTerm}"</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'quickapp-card';
+        card.innerHTML = `
+          <div class="quickapp-icon" style="background:${app.color};">
+            <i class="fa-solid ${app.icon}"></i>
+          </div>
+          <div class="quickapp-info">
+            <div class="quickapp-name">${app.name}</div>
+            <div class="quickapp-desc">${app.desc}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    /* ==========================================================
+       APPLICATIONS PAGE — SEARCH & FILTER
+       ========================================================== */
+    let appsSearchTerm = '';
+    let appsFilter = 'all';
+
+    function renderApplicationPage() {
+      const q = appsSearchTerm.toLowerCase().trim();
+      const filtered = ALL_APPS.filter(app => {
+        const matchesSearch = !q ||
+          app.name.toLowerCase().includes(q) ||
+          app.desc.toLowerCase().includes(q);
+        const matchesFilter = appsFilter === 'all' || app.cat === appsFilter;
+        return matchesSearch && matchesFilter;
+      });
+
+      renderListApps('allAppsList', filtered);
+
+      const countEl = document.getElementById('appsCount');
+      if (countEl) {
+        countEl.textContent = `${filtered.length} application${filtered.length !== 1 ? 's' : ''}`;
+      }
+    }
+
+    /* ==========================================================
+       LIVE DATE/TIME
+       ========================================================== */
+    function updateDateTime() {
+      const now = new Date();
+      const opts = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+      const dateStr = now.toLocaleDateString('en-GB', opts);
+      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const el = document.getElementById('homeDatetime');
+      if (el) el.textContent = `${dateStr} • ${timeStr}`;
+    }
+
+    /* ==========================================================
+       INIT
+       ========================================================== */
+    function init() {
+      renderNav();
+
+      // Per-page app lists
+      renderListApps('portalsApps',    APPS.portals);
+      renderListApps('productsApps',   APPS.products);
+      renderListApps('enterpriseApps', APPS.enterprise);
+      renderListApps('hrApps',         APPS.hr);
+      renderListApps('divisionsApps',  APPS.divisions);
+      renderListApps('documentsApps',  APPS.documents);
+      renderListApps('analyticsApps',  APPS.analytics);
+      renderListApps('peopleApps',     APPS.people);
+      renderListApps('calendarApps',   APPS.calendar);
+      renderListApps('supportApps',    APPS.support);
+      renderListApps('settingsApps',   APPS.settings);
+
+      // Applications page
+      renderApplicationPage();
+
+      // Home quick apps
+      renderQuickApps();
+
+      // Home search (filters quick apps live)
+      const homeSearch = document.getElementById('homeAppsSearch');
+      if (homeSearch) {
+        homeSearch.addEventListener('input', (e) => {
+          homeSearchTerm = e.target.value;
+          renderQuickApps();
+        });
+      }
+
+      // "View all Apps" button → go to Applications page
+      const viewAllBtn = document.getElementById('viewAllAppsBtn');
+      if (viewAllBtn) {
+        viewAllBtn.addEventListener('click', () => {
+          navigateTo('apps');
+        });
+      }
+
+      // Application page search
+      const appsSearch = document.getElementById('appsSearch');
+      if (appsSearch) {
+        appsSearch.addEventListener('input', (e) => {
+          appsSearchTerm = e.target.value;
+          renderApplicationPage();
+        });
+      }
+
+      // Filter chips
+      document.querySelectorAll('#appsFilters .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('#appsFilters .chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          appsFilter = chip.dataset.filter;
+          renderApplicationPage();
+        });
+      });
+
+      // Rail clicks
+      document.querySelectorAll('.rail-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          navigateTo(btn.dataset.page);
+        });
+      });
+
+      // Hash on load
+      if (window.location.hash) {
+        const pageId = window.location.hash.substring(1);
+        const exists = NAV_ITEMS.some(n => n.id === pageId) ||
+                       document.querySelector(`.page[data-page="${pageId}"]`);
+        if (exists) navigateTo(pageId);
+      }
+
+      // Browser back/forward
+      window.addEventListener('hashchange', () => {
+        const pageId = window.location.hash.substring(1);
+        if (pageId) navigateTo(pageId);
+      });
+
+      // Live clock
+      updateDateTime();
+      setInterval(updateDateTime, 60000);
+
+      console.log('%c🌿 Jaiz Bank Intranet Portal Loaded',
+        'color:#002f5e;background:#aad5ff;font-weight:bold;font-size:14px;padding:6px 12px;border-radius:4px;');
+    }
+
+    init();
+  </script>
+
+</body>
+</html>
